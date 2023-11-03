@@ -1,21 +1,21 @@
+import React, { useState } from "react";
 import {
   SafeAreaView,
   Image,
   StyleSheet,
+  FlatList,
   Text,
   View,
+  Dimensions,
   TouchableOpacity,
 } from "react-native";
-import React from "react";
-import {
-  SimpleLineIcons,
-  Feather,
-  Ionicons,
-  FontAwesome,
-  FontAwesome5,
-} from "@expo/vector-icons";
+import { FontAwesome, FontAwesome5 } from "@expo/vector-icons";
+
+const { width } = Dimensions.get("screen");
 
 const Home = ({ navigation }) => {
+  const [currentIndex, setCurrentIndex] = useState(0);
+
   return (
     <SafeAreaView style={{ backgroundColor: "#1E1E1E", flex: 1 }}>
       <View style={{ padding: 22 }}>
@@ -50,37 +50,60 @@ const Home = ({ navigation }) => {
         <Text style={{ fontSize: 28, fontWeight: 400, color: "#fff" }}>
           With your own style
         </Text>
-        <View
-          style={{
-            margin: 30,
-            padding: 12,
-            alignSelf: "center",
-            width: 260,
-            justifyContent: "center",
-            alignItems: "center",
-            borderWidth: 2,
-            borderRadius: 125,
-            borderColor: "#FDAB72",
+        <FlatList
+          data={[0, 0, 0]}
+          horizontal
+          style={{ width, marginLeft: -22 }}
+          pagingEnabled
+          showsHorizontalScrollIndicator={false}
+          onScroll={(e) => {
+            const x = e.nativeEvent.contentOffset.x;
+            setCurrentIndex((x / width).toFixed(0));
           }}
-        >
-          <Image
-            style={{
-              borderRadius: 200,
-              width: 230,
-              height: 360,
-            }}
-            source={require("../assets/home-img.png")}
-          />
-        </View>
+          renderItem={({ item }) => {
+            return (
+              <View
+                style={{
+                  justifyContent: "center",
+                  alignItems: "center",
+                  width: width,
+                }}
+              >
+                <View
+                  style={{
+                    marginVertical: 22,
+                    padding: 12,
+                    width: 260,
+                    borderWidth: 2,
+                    borderRadius: 125,
+                    borderColor: "#FDAB72",
+                  }}
+                >
+                  <Image
+                    style={{
+                      borderRadius: 200,
+                      width: 230,
+                      height: 360,
+                    }}
+                    source={require("../assets/home-img.png")}
+                  />
+                </View>
+              </View>
+            );
+          }}
+        />
+
         <View style={{ flexDirection: "row", justifyContent: "center" }}>
-          <FontAwesome name="circle" size={15} color="#fff" />
-          <FontAwesome
-            style={{ marginHorizontal: 8 }}
-            name="circle"
-            size={14}
-            color="#FDAB72"
-          />
-          <FontAwesome name="circle" size={15} color="#fff" />
+          {[0, 0, 0].map((_, index) => {
+            return (
+              <FontAwesome
+                style={{ marginHorizontal: 8 }}
+                name="circle"
+                size={15}
+                color={currentIndex == index ? "#FDAB72" : "#fff"}
+              />
+            );
+          })}
         </View>
         <TouchableOpacity
           onPress={() => navigation.navigate("Dashboard")}
